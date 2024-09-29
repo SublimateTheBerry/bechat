@@ -51,6 +51,9 @@ cd bechat
 ```
 3. Build the application:
 ```
+go mod init bechat
+go get github.com/gempir/go-twitch-irc/v3
+go get github.com/gorilla/websocket
 go build main.go bechat
 ```
 4. Run the application with the desired platform flags:
