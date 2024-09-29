@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Overlay</title>
+    <style>
+        body {
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            overflow: hidden;
+        }
+
+        #chat {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            padding: 10px;
+        }
+
+        .message {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .text {
+            word-wrap: break-word;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-out {
+            animation: fadeOut 2s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="chat"></div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:12597/ws");
+        const chat = document.getElementById('chat');
+
+        socket.onopen = function() {
+            console.log("WebSocket connection established");
+        };
+
+        socket.onerror = function(error) {
+            console.error("WebSocket error:", error);
+        };
+
+        socket.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message';
+
+                const username = document.createElement('span');
+                username.className = 'username';
+                username.style.color = data.color;
+                username.textContent = data.username;
+
+                const text = document.createElement('span');
+                text.className = 'text';
+                text.textContent = data.message;
+
+                const platform = document.createElement('span');
+                platform.className = 'platform';
+                if (data.platform === 'twitch') {
+                    platform.innerHTML = '<img src="https://www.twitch.tv/favicon.ico" alt="Twitch" width="20" height="20">&nbsp;';
+                } else if (data.platform === 'gg') {
+                    platform.innerHTML = '<img src="https://goodgame.ru/favicon.ico" alt="Goodgame" width="20" height="20">&nbsp;';
+                }
+
+                newMessage.appendChild(platform);
+                newMessage.appendChild(username);
+                newMessage.appendChild(text);
+                chat.prepend(newMessage);
+
+                setTimeout(() => {
+                    newMessage.classList.add('fade-out');
+                    setTimeout(() => {
+                        newMessage.remove();
+                    }, 2000);
+                }, 10000);
+            } catch (e) {
+                console.error("Error parsing WebSocket message:", e);
+            }
+        };
+
+        socket.onclose = function() {
+            console.log("WebSocket connection closed");
+        };
+    </script>
+</body>
+</html>
+
