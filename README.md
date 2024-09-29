@@ -8,6 +8,9 @@
   ![WebSocket](https://img.shields.io/badge/WebSocket-%23404d59.svg?style=for-the-badge&logo=WebSocket&logoColor=%23E0234E)
   ![Cross-platform](https://img.shields.io/badge/Platform-Cross--platform-important?style=for-the-badge)
   ![Release date](https://img.shields.io/github/release-date/SublimateTheBerry/bechat?style=for-the-badge)
+
+  ![Example](https://github.com/user-attachments/assets/e2ec01ce-3dcc-4f1a-b152-bd2965dbd174)
+
 </div>
 
 ## 📖 About
